@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KD Polytechnic, Patan - College Portal</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --navy:   #1a2a4a;
+            --blue:   #2563eb;
+            --gold:   #d4a017;
+            --light:  #f0f4ff;
+            --white:  #ffffff;
+            --gray:   #6b7280;
+            --border: #cbd5e1;
+            --success:#16a34a;
+            --radius: 8px;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--light);
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        header { background: var(--navy); color: var(--white); padding: 0; }
+
+        .header-top {
+            background: var(--gold);
+            text-align: center;
+            padding: 6px 20px;
+            font-size: 13px;
+            color: var(--navy);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .header-main {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 18px 40px;
+        }
+
+        .header-logo {
+            width: 64px; height: 64px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 22px; color: var(--navy); font-weight: 700; flex-shrink: 0;
+        }
+
+        .header-text h1 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--white); line-height: 1.2; }
+        .header-text p  { font-size: 13px; color: var(--gold); margin-top: 3px; letter-spacing: 0.4px; }
+
+        nav { background: var(--blue); padding: 0 40px; display: flex; gap: 4px; }
+
+        nav a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            padding: 13px 22px;
+            font-size: 14px; font-weight: 600; letter-spacing: 0.3px;
+            display: inline-block;
+            transition: background 0.2s, color 0.2s;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        nav a:hover, nav a.active {
+            background: rgba(255,255,255,0.12);
+            color: var(--white);
+            border-bottom-color: var(--gold);
+        }
+
+        .page-wrapper { max-width: 1100px; margin: 36px auto; padding: 0 24px 60px; }
+
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .section-title { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--navy); margin-bottom: 6px; }
+        .section-subtitle { color: var(--gray); font-size: 15px; margin-bottom: 30px; }
+
+        .divider { border: none; border-top: 2px solid var(--gold); width: 60px; margin: 10px 0 28px; }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 28px 32px;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 19px; color: var(--navy);
+            margin-bottom: 16px; padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Slider */
+        .slider-wrapper {
+            position: relative; width: 100%; max-width: 760px;
+            margin: 0 auto 28px;
+            border-radius: var(--radius); overflow: hidden;
+            border: 3px solid var(--navy);
+            box-shadow: 0 8px 24px rgba(26,42,74,0.18);
+        }
+
+        .slider-wrapper img {
+            width: 100%; height: 340px; object-fit: cover; display: block;
+            transition: opacity 0.7s ease;
+        }
+
+        .slider-caption {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: linear-gradient(transparent, rgba(26,42,74,0.85));
+            color: var(--white); padding: 20px 20px 16px;
+            font-size: 15px; font-weight: 600;
+        }
+
+        .slider-dots { text-align: center; margin-top: 12px; }
+        .slider-dots span {
+            display: inline-block; width: 10px; height: 10px;
+            border-radius: 50%; background: var(--border);
+            margin: 0 4px; cursor: pointer; transition: background 0.3s;
+        }
+        .slider-dots span.active { background: var(--blue); }
+
+        /* Info Grid */
+        .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 28px; }
+
+        .info-box { background: var(--navy); color: var(--white); border-radius: var(--radius); padding: 20px; text-align: center; }
+        .info-box .num { font-family: 'Playfair Display', serif; font-size: 34px; color: var(--gold); }
+        .info-box .label { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 4px; }
+
+        /* Forms */
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-weight: 600; font-size: 14px; color: var(--navy); margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 10px 14px;
+            border: 1px solid var(--border); border-radius: var(--radius);
+            font-size: 14px; font-family: inherit; color: #1e293b;
+            background: var(--white); outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+        }
+
+        .btn {
+            background: var(--blue); color: var(--white);
+            border: none; border-radius: var(--radius);
+            padding: 11px 30px; font-size: 14px; font-weight: 600;
+            cursor: pointer; letter-spacing: 0.3px;
+            transition: background 0.2s, transform 0.15s;
+        }
+        .btn:hover { background: var(--navy); transform: translateY(-1px); }
+
+        .alert-success {
+            background: #dcfce7; border: 1px solid #86efac; color: var(--success);
+            border-radius: var(--radius); padding: 14px 20px; margin-bottom: 20px;
+            font-weight: 600; display: flex; align-items: center; gap: 10px;
+        }
+
+        /* Tables */
+        .table-container { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 28px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        table thead { background: var(--navy); color: var(--white); }
+        table thead th { padding: 13px 16px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.3px; }
+        table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+        table tbody tr:last-child { border-bottom: none; }
+        table tbody tr:hover { background: var(--light); }
+        table tbody td { padding: 12px 16px; color: #334155; }
+        table tbody tr:nth-child(even) td { background: #f8faff; }
+
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .badge-active   { background: #dcfce7; color: #166534; }
+        .badge-issued   { background: #fef3c7; color: #92400e; }
+        .badge-returned { background: #dbeafe; color: #1e40af; }
+
+        footer {
+            background: var(--navy); color: rgba(255,255,255,0.6);
+            text-align: center; padding: 18px; font-size: 13px; margin-top: 60px;
+        }
+        footer strong { color: var(--gold); }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="header-top">
+        Affiliated to Gujarat Technological University (GTU) &nbsp;|&nbsp; Approved by AICTE
+    </div>
+    <div class="header-main">
+        <div class="header-logo">KD</div>
+        <div class="header-text">
+            <h1>KD Polytechnic, Patan</h1>
+            <p>Knowledge &bull; Discipline &bull; Excellence &nbsp;&mdash;&nbsp; Patan, Gujarat</p>
+        </div>
+    </div>
+</header>
+
+<!-- NAVIGATION -->
+<nav>
+    <a onclick="showPage('home')"      id="nav-home"      class="active">&#127968; Home</a>
+    <a onclick="showPage('admission')" id="nav-admission"             >&#128203; Admission</a>
+    <a onclick="showPage('library')"   id="nav-library"               >&#128218; Library</a>
+</nav>
+
+<!-- PAGE CONTENT -->
+<div class="page-wrapper">
+
+    <!-- ===== HOME PAGE ===== -->
+    <div id="page-home" class="page active">
+        <h2 class="section-title">Welcome to KD Polytechnic, Patan</h2>
+        <p class="section-subtitle">Empowering students with quality technical education since 1985.</p>
+        <hr class="divider">
+
+        <div class="slider-wrapper">
+            <img id="sliderImg" src="https://uploads.onecompiler.io/44m8eb3ha/3xt4z3ws9/19066.jpg" alt="Campus">
+            <div class="slider-caption" id="sliderCaption">Academic Block &mdash; KD Polytechnic, Patan</div>
+        </div>
+        <div class="slider-dots">
+            <span class="active" onclick="goToSlide(0)"></span>
+            <span onclick="goToSlide(1)"></span>
+            <span onclick="goToSlide(2)"></span>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-box"><div class="num">38+</div><div class="label">Years of Excellence</div></div>
+            <div class="info-box"><div class="num">12</div><div class="label">Diploma Programs</div></div>
+            <div class="info-box"><div class="num">5000+</div><div class="label">Alumni Worldwide</div></div>
+        </div>
+
+        <div class="card" style="margin-top: 28px;">
+            <h3>About Our Institute</h3>
+            <p style="line-height: 1.7; color: #475569;">
+                KD Polytechnic, Patan is a premier technical institute in North Gujarat, affiliated with the
+                Gujarat Technological University (GTU). We offer diploma engineering programs in Computer Engineering,
+                Civil Engineering, Electrical Engineering, and Mechanical Engineering. Our mission is to provide
+                industry-relevant, hands-on technical education that prepares students for real-world challenges.
+            </p>
+        </div>
+    </div>
+
+    <!-- ===== ADMISSION PAGE ===== -->
+    <div id="page-admission" class="page">
+        <h2 class="section-title">Admission Section</h2>
+        <p class="section-subtitle">Apply for admission to our Diploma Engineering programs.</p>
+        <hr class="divider">
+
+        <div id="admission-success" class="alert-success" style="display:none;">
+            &#10003;&nbsp; Application Submitted Successfully!
+        </div>
+
+        <div id="admission-result-card" class="card" style="display:none;">
+            <h3>Application Details</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Field</th><th>Details</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Applicant Name</strong></td><td id="result-name"></td></tr>
+                        <tr><td><strong>Course Applied</strong></td><td id="result-course"></td></tr>
+                        <tr><td><strong>Status</strong></td><td><span class="badge badge-active">Under Review</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <button class="btn" onclick="resetAdmission()">&#8592; Apply Again</button>
+        </div>
+
+        <div id="admission-form-card" class="card">
+            <h3>Online Application Form</h3>
+            <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="adm-name" placeholder="Enter your full name">
+            </div>
+            <div class="form-group">
+                <label for="course">Course *</label>
+                <select id="adm-course">
+                    <option value="">-- Select a Course --</option>
+                    <option>Computer Engineering</option>
+                    <option>Civil Engineering</option>
+                    <option>Electrical Engineering</option>
+                    <option>Mechanical Engineering</option>
+                    <option>Electronics &amp; Communication</option>
+                </select>
+            </div>
+            <button class="btn" onclick="submitAdmission()">Submit Application &#8594;</button>
+        </div>
+    </div>
+
+    <!-- ===== LIBRARY PAGE ===== -->
+    <div id="page-library" class="page">
+        <h2 class="section-title">Library Management</h2>
+        <p class="section-subtitle">View library members, issued books, and return records.</p>
+        <hr class="divider">
+
+        <!-- Add Book -->
+        <div class="card">
+            <h3>&#128218; Add New Book</h3>
+            <div id="book-success" class="alert-success" style="display:none;"></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="form-group">
+                    <label>Book Name *</label>
+                    <input type="text" id="lib-book" placeholder="Enter book title">
+                </div>
+                <div class="form-group">
+                    <label>Author Name *</label>
+                    <input type="text" id="lib-author" placeholder="Enter author name">
+                </div>
+            </div>
+            <button class="btn" onclick="addBook()">Add Book</button>
+        </div>
+
+        <!-- Members -->
+        <div class="card">
+            <h3>&#128100; Library Members</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Member ID</th><th>Name</th><th>Course</th><th>Status</th></tr></thead>
+                    <tbody>
+                        <tr><td>M001</td><td>Vishal Patel</td><td>Computer Engineering</td><td><span class="badge badge-active">Active</span></td></tr>
+                        <tr><td>M002</td><td>Rudra Shah</td><td>Civil Engineering</td><td><span class="badge badge-active">Active</span></td></tr>
+                        <tr><td>M003</td><td>Priya Desai</td><td>Electrical Engineering</td><td><span class="badge badge-active">Active</span></td></tr>
+                        <tr><td>M004</td><td>Ankit Joshi</td><td>Mechanical Engineering</td><td><span class="badge badge-active">Active</span></td></tr>
+                        <tr><td>M005</td><td>Neha Sharma</td><td>Computer Engineering</td><td><span class="badge badge-active">Active</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Issued Books -->
+        <div class="card">
+            <h3>&#128466; Issued Books</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Issue ID</th><th>Member</th><th>Book</th><th>Issue Date</th><th>Status</th></tr></thead>
+                    <tbody id="issued-tbody">
+                        <tr><td>I001</td><td>Vishal Patel</td><td>Introduction to PHP</td><td>01-04-2026</td><td><span class="badge badge-issued">Pending</span></td></tr>
+                        <tr><td>I002</td><td>Rudra Shah</td><td>Hunter Story</td><td>05-04-2026</td><td><span class="badge badge-issued">Pending</span></td></tr>
+                        <tr><td>I003</td><td>Priya Desai</td><td>Database Management</td><td>08-04-2026</td><td><span class="badge badge-issued">Pending</span></td></tr>
+                        <tr><td>I004</td><td>Ankit Joshi</td><td>Engineering Mathematics</td><td>10-04-2026</td><td><span class="badge badge-issued">Pending</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Returned Books -->
+        <div class="card">
+            <h3>&#10003; Returned Books</h3>
+            <div class="table-container">
+                <table>
+                    <thead><tr><th>Return ID</th><th>Member</th><th>Book</th><th>Issue Date</th><th>Return Date</th></tr></thead>
+                    <tbody>
+                        <tr><td>R001</td><td>Neha Sharma</td><td>Past Stories</td><td>15-03-2026</td><td><span class="badge badge-returned">10-04-2026</span></td></tr>
+                        <tr><td>R002</td><td>Vishal Patel</td><td>Web Technologies</td><td>01-03-2026</td><td><span class="badge badge-returned">28-03-2026</span></td></tr>
+                        <tr><td>R003</td><td>Rudra Shah</td><td>C Programming</td><td>20-02-2026</td><td><span class="badge badge-returned">15-03-2026</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div><!-- end .page-wrapper -->
+
+<!-- FOOTER -->
+<footer>
+    &copy; 2026 &nbsp;<strong>KD Polytechnic, Patan</strong>&nbsp; |
+    Introduction to Web Development (DI04007011) &nbsp;|&nbsp; Practical No. 13
+</footer>
+
+<script>
+    // ---- Page Navigation ----
+    function showPage(name) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+        document.getElementById('page-' + name).classList.add('active');
+        document.getElementById('nav-' + name).classList.add('active');
+    }
+
+    // ---- Image Slider ----
+    var slides = [
+        { src: "https://uploads.onecompiler.io/44m8eb3ha/3xt4z3ws9/19066.jpg", caption: "Academic Block &mdash; KD Polytechnic, Patan" },
+        { src: "https://uploads.onecompiler.io/44m8eb3ha/3xt4z3ws9/19059.jpg", caption: "Main Gate &mdash; KD Polytechnic, Patan" },
+        { src: "https://uploads.onecompiler.io/44m8eb3ha/3xt4z3ws9/19062.jpg", caption: "Campus Grounds &mdash; KD Polytechnic, Patan" }
+    ];
+
+    var currentSlide = 0;
+
+    function goToSlide(n) {
+        currentSlide = n;
+        var img = document.getElementById('sliderImg');
+        img.style.opacity = 0;
+        setTimeout(function () {
+            img.src = slides[n].src;
+            document.getElementById('sliderCaption').innerHTML = slides[n].caption;
+            img.style.opacity = 1;
+        }, 350);
+        document.querySelectorAll('.slider-dots span').forEach(function (d, i) {
+            d.classList.toggle('active', i === n);
+        });
+    }
+
+    setInterval(function () {
+        currentSlide = (currentSlide + 1) % slides.length;
+        goToSlide(currentSlide);
+    }, 3000);
+
+    // ---- Admission Form ----
+    function submitAdmission() {
+        var name   = document.getElementById('adm-name').value.trim();
+        var course = document.getElementById('adm-course').value;
+        if (!name || !course) { alert('બધી માહિતી ભરો!'); return; }
+
+        document.getElementById('result-name').textContent   = name;
+        document.getElementById('result-course').textContent = course;
+        document.getElementById('admission-success').style.display      = 'flex';
+        document.getElementById('admission-result-card').style.display  = 'block';
+        document.getElementById('admission-form-card').style.display    = 'none';
+    }
+
+    function resetAdmission() {
+        document.getElementById('adm-name').value   = '';
+        document.getElementById('adm-course').value = '';
+        document.getElementById('admission-success').style.display     = 'none';
+        document.getElementById('admission-result-card').style.display = 'none';
+        document.getElementById('admission-form-card').style.display   = 'block';
+    }
+
+    // ---- Library Add Book ----
+    var issueCount = 5;
+    function addBook() {
+        var book   = document.getElementById('lib-book').value.trim();
+        var author = document.getElementById('lib-author').value.trim();
+        if (!book || !author) { alert('Book name અને Author name ભરો!'); return; }
+
+        var msg = document.getElementById('book-success');
+        msg.innerHTML = '&#10003;&nbsp; Book "<strong>' + book + '</strong>" by <strong>' + author + '</strong> added successfully!';
+        msg.style.display = 'flex';
+
+        // Add to issued table as demo
+        var tbody = document.getElementById('issued-tbody');
+        var row = document.createElement('tr');
+        issueCount++;
+        var today = new Date();
+        var dateStr = String(today.getDate()).padStart(2,'0') + '-' +
+                      String(today.getMonth()+1).padStart(2,'0') + '-' + today.getFullYear();
+        row.innerHTML = '<td>I00' + issueCount + '</td><td>—</td><td>' + book + '</td><td>' + dateStr + '</td><td><span class="badge badge-issued">Pending</span></td>';
+        tbody.appendChild(row);
+
+        document.getElementById('lib-book').value   = '';
+        document.getElementById('lib-author').value = '';
+
+        setTimeout(function(){ msg.style.display = 'none'; }, 4000);
+    }
+</script>
+</body>
+</html>
